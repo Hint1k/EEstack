@@ -6,3 +6,4 @@
 
 **Installation info:**<br>
 - Console command: docker-compose up --build <br>
+- Access the app: http://localhost:8080
