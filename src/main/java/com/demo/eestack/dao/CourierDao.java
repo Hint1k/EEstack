@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface CourierDao {
 
-    List<Courier> getCouriers();
+    List<Courier> getCourierList();
 
     Courier getCourier(Long id);
 

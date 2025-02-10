@@ -30,7 +30,7 @@ public class CourierDaoImpl implements CourierDao {
     }
 
     @Override
-    public List<Courier> getCouriers() {
+    public List<Courier> getCourierList() {
         List<Courier> couriers = new ArrayList<>();
         String sql = "SELECT * FROM courier";
 
@@ -56,6 +56,7 @@ public class CourierDaoImpl implements CourierDao {
     @Override
     public Courier getCourier(Long id) {
         String sql = "SELECT * FROM courier WHERE id = ?";
+
         try (Connection connection = getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setLong(1, id);
@@ -78,6 +79,7 @@ public class CourierDaoImpl implements CourierDao {
     @Override
     public void saveCourier(Courier courier) {
         String sql = "INSERT INTO courier (first_name, last_name, phone) VALUES (?, ?, ?)";
+
         try (Connection connection = getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setString(1, courier.getFirstName());
@@ -96,10 +98,8 @@ public class CourierDaoImpl implements CourierDao {
             log.error("Courier object is null, cannot update.");
             throw new IllegalArgumentException("Courier cannot be null");
         }
-        log.info("Updating courier with ID: {}, firstName: {}, lastName: {}, phone: {}",
-                courier.getId(), courier.getFirstName(), courier.getLastName(), courier.getPhone());
-
         String sql = "UPDATE courier SET first_name = ?, last_name = ?, phone = ? WHERE id = ?";
+
         try (Connection connection = getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setString(1, courier.getFirstName());
@@ -120,6 +120,7 @@ public class CourierDaoImpl implements CourierDao {
     @Override
     public void deleteCourier(Long id) {
         String sql = "DELETE FROM courier WHERE id = ?";
+
         try (Connection connection = getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setLong(1, id);

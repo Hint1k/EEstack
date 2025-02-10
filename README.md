@@ -1,2 +1,8 @@
 **Application Overview:**<br>
-A demo application to learn and apply Jakarta EE (formerly Java EE), Servlets, JDBC, JSP, and JSTL.<br>
+ 
+- CRUD operations on tables Courier and Address
+- Simple web-interface
+- PostgreSQL database to store tables
+
+**Installation info:**<br>
+- Console command: docker-compose up --build <br>

@@ -50,9 +50,7 @@ public class CourierController extends HttpServlet {
     private Long extractIdFromPath(String pathInfo) {
         if (pathInfo != null && pathInfo.length() > 1) {
             try {
-                Long id = Long.parseLong(pathInfo.substring(1));
-                log.info("Extracted ID: {}", id);
-                return id;
+                return Long.parseLong(pathInfo.substring(1));
             } catch (NumberFormatException ignored) {
                 // it means a page with no courier id is requested
             }
@@ -63,7 +61,7 @@ public class CourierController extends HttpServlet {
     // Show all couriers
     private void showCourierList(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        List<Courier> couriers = courierDao.getCouriers();
+        List<Courier> couriers = courierDao.getCourierList();
         request.setAttribute("couriers", couriers);
         request.getRequestDispatcher("/WEB-INF/views/courier-list.jsp").forward(request, response);
     }
@@ -78,12 +76,8 @@ public class CourierController extends HttpServlet {
     // Show update courier form
     private void showUpdateCourierForm(HttpServletRequest request, HttpServletResponse response, Long id)
             throws ServletException, IOException {
-        log.info("Looking for courier with ID: {} to update", id);
         Courier courier = courierDao.getCourier(id);
-        log.info("Courier to update with id: {}, First name: {}, Last name: {}, Phone number: {}",
-                courier.getId(), courier.getFirstName(), courier.getLastName(), courier.getPhone());
         if (courier != null) {
-            log.info("Courier to update found: {}", courier);
             request.setAttribute("courier", courier);
             request.getRequestDispatcher("/WEB-INF/views/update-courier.jsp").forward(request, response);
         } else {
@@ -104,7 +98,6 @@ public class CourierController extends HttpServlet {
                 String firstName = request.getParameter("firstName");
                 String lastName = request.getParameter("lastName");
                 String phone = request.getParameter("phone");
-                log.info("Courier to create: first Name: {}, Last name: {}, phone: {}", firstName, lastName, phone);
                 Courier courier = new Courier(null, firstName, lastName, phone);
                 courierDao.saveCourier(courier);
                 response.sendRedirect(request.getContextPath() + "/api/couriers");
@@ -124,7 +117,6 @@ public class CourierController extends HttpServlet {
             String lastName = request.getParameter("lastName");
             String phone = request.getParameter("phone");
             Courier courier = new Courier(id, firstName, lastName, phone);
-            log.info("Id: {} , First Name: {}, Last Name: {}, Phone: {}", id, firstName, lastName, phone);
             courierDao.updateCourier(courier);
             response.sendRedirect(request.getContextPath() + "/api/couriers");
         } catch (Exception e) {

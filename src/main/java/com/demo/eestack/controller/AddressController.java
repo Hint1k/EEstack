@@ -51,9 +51,7 @@ public class AddressController extends HttpServlet {
     private Long extractIdFromPath(String pathInfo) {
         if (pathInfo != null && pathInfo.length() > 1) {
             try {
-                Long id = Long.parseLong(pathInfo.substring(1));
-                log.info("Extracted ID: {}", id);
-                return id;
+                return Long.parseLong(pathInfo.substring(1));
             } catch (NumberFormatException ignored) {
                 // it means a page with no address id is requested
             }
@@ -64,7 +62,7 @@ public class AddressController extends HttpServlet {
     // Show all addresses
     private void showAddressList(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        List<Address> addresses = addressDao.getAddresses();
+        List<Address> addresses = addressDao.getAddressList();
         request.setAttribute("addresses", addresses);
         request.getRequestDispatcher("/WEB-INF/views/address-list.jsp").forward(request, response);
     }
@@ -73,7 +71,7 @@ public class AddressController extends HttpServlet {
     private void showNewAddressForm(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         // Fetch all couriers for the dropdown in the address form
-        List<Courier> couriers = courierDao.getCouriers();
+        List<Courier> couriers = courierDao.getCourierList();
         request.setAttribute("couriers", couriers);
         request.setAttribute("address", new Address());
         request.getRequestDispatcher("/WEB-INF/views/new-address.jsp").forward(request, response);
@@ -82,9 +80,8 @@ public class AddressController extends HttpServlet {
     // Show update address form
     private void showUpdateAddressForm(HttpServletRequest request, HttpServletResponse response, Long id)
             throws ServletException, IOException {
-        log.info("Looking for address with ID: {} to update", id);
         Address address = addressDao.getAddress(id);
-        List<Courier> couriers = courierDao.getCouriers();
+        List<Courier> couriers = courierDao.getCourierList();
         if (address == null) {
             log.error("Address with ID {} not found", id);
             response.sendError(HttpServletResponse.SC_NOT_FOUND, "Address not found");
@@ -92,7 +89,6 @@ public class AddressController extends HttpServlet {
             log.error("Couriers not found");
             response.sendError(HttpServletResponse.SC_NOT_FOUND, "Couriers not found");
         } else {
-            log.info("Address to update found: {}", address);
             // Fetch all couriers for the dropdown in the update form
             request.setAttribute("couriers", couriers);
             request.setAttribute("address", address);
@@ -137,7 +133,6 @@ public class AddressController extends HttpServlet {
             String courierId = request.getParameter("courierId");
             Courier courier = courierDao.getCourier(Long.parseLong(courierId));
             Address address = new Address(id, country, city, street, houseNumber, courier);
-            log.info("Address to update: {}", address);
             addressDao.updateAddress(address);
             response.sendRedirect(request.getContextPath() + "/api/addresses");
         } catch (Exception e) {

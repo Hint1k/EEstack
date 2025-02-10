@@ -31,11 +31,11 @@ public class AddressDaoImpl implements AddressDao {
     }
 
     @Override
-    public List<Address> getAddresses() {
+    public List<Address> getAddressList() {
         List<Address> addresses = new ArrayList<>();
         String sql = "SELECT a.id, a.country_name, a.city_name, a.street_name, a.house_number, " +
                 "c.id AS courier_id, c.first_name, c.last_name, c.phone " +
-                "FROM address a LEFT JOIN courier c ON a.courier_id = c.id";
+                "FROM address a JOIN courier c ON a.courier_id = c.id";
 
         try (Connection connection = getConnection();
              Statement statement = connection.createStatement();
@@ -103,6 +103,7 @@ public class AddressDaoImpl implements AddressDao {
     @Override
     public boolean isCourierAssigned(Long courierId) {
         String sql = "SELECT 1 FROM address WHERE courier_id = ? LIMIT 1";
+
         try (Connection connection = getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setLong(1, courierId);
@@ -126,7 +127,6 @@ public class AddressDaoImpl implements AddressDao {
             statement.setString(3, address.getStreetName());
             statement.setString(4, address.getHouseNumber());
             statement.setLong(5, address.getCourier().getId());
-
             statement.executeUpdate();
         } catch (SQLException e) {
             log.error("Error saving address: {}", e.getMessage());
@@ -147,7 +147,6 @@ public class AddressDaoImpl implements AddressDao {
             statement.setString(4, address.getHouseNumber());
             statement.setLong(5, address.getCourier().getId());
             statement.setLong(6, address.getId());
-
             statement.executeUpdate();
         } catch (SQLException e) {
             log.error("Error updating address: {}", e.getMessage());

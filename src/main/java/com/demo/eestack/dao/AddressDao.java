@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface AddressDao {
 
-    List<Address> getAddresses();
+    List<Address> getAddressList();
 
     Address getAddress(Long id);
 
